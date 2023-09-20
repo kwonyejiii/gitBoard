@@ -79,10 +79,10 @@ public class BoardController {
     // MyBatis 페이징
     @GetMapping("/paging")
     public String myBatisPaging(@RequestParam(defaultValue = "1") int page, Model model) {
-        int pageSize = 3; // 한 페이지당 항목 수
+        int pageSize = 2; // 한 페이지당 항목 수
 
         // 시작 및 끝 페이지 번호 계산
-        int maxPageLinksToShow = 3; // 필요에 따라 조정
+        int maxPageLinksToShow = 3;
         int halfMaxPageLinksToShow = maxPageLinksToShow / 2;
         int totalRecords = boardService.getTotalRecordCount(); // BoardService를 통해 전체 레코드 수 가져오기
         int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
@@ -99,8 +99,6 @@ public class BoardController {
         return "list";
     }
 }
-
-
 /*jpa페이징
     // /board/paging?page=1
     @GetMapping("/paging")

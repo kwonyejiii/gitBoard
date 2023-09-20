@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        th:nth-child(1), td:nth-child(1) {
+            width: 5%;
+        }
+
+        th:nth-child(2), td:nth-child(2), th:nth-child(3), td:nth-child(3) {
+            width: 30%;
+        }
+
+        th:nth-child(4), td:nth-child(4) {
+            width: 20%;
+        }
+
+        th:nth-child(5), td:nth-child(5) {
+            width: 15%;
+        }
+
+        th:nth-child(6), td:nth-child(6) {
+            width: 10%;
+        }
+
+        .pagination {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination li {
+            margin: 0 5px;
+        }
+
+        .pagination a {
+            text-decoration: none;
+            background-color: #f2f2f2;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            color: #333;
+        }
+
+        .pagination .active a {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .pagination .disabled a {
+            pointer-events: none;
+            background-color: #ccc;
+        }
+
+        button {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+<h1>List</h1>
+
+<button onclick="saveReq()">글작성</button>
+
+<table>
+    <tr>
+        <th>id</th>
+        <th>title</th>
+        <th>writer</th>
+        <th>date</th>
+        <th>hits</th>
+    </tr>
+    <tr th:each="board: ${boardList}">
+        <td th:text="${board.id}"></td>
+        <td><a th:href="@{|/board/${board.id}|(page=${boardList.number + 1})}" th:text="${board.boardTitle}"></a></td>
+        <td th:text="${board.boardWriter}"></td>
+        <td th:text="*{#temporals.format(board.boardCreatedTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td th:text="${board.boardHits}"></td>
+    </tr>
+</table>
+
+<!-- MyBatis 페이징 -->
+<ul class="pagination">
+    <li th:class="${page == 1} ? 'disabled' : ''">
+        <a th:href="@{/board/paging(page=1)}">First</a>
+    </li>
+    <li th:class="${page == 1} ? 'disabled' : ''">
+        <a th:href="@{|/board/paging?page=${page - 1}|}">prev</a>
+    </li>
+    <span th:each="pageNum: ${#numbers.sequence(startPage, endPage)}">
+        <li th:class="${page == pageNum} ? 'active' : ''">
+            <a th:href="@{|/board/paging?page=${pageNum}|}" th:text="${pageNum}"></a>
+        </li>
+    </span>
+    <li th:class="${page == totalPages} ? 'disabled' : ''">
+        <a th:href="@{|/board/paging?page=${page + 1}|}">next</a>
+    </li>
+    <li th:class="${page == totalPages} ? 'disabled' : ''">
+        <a th:href="@{|/board/paging?page=${totalPages}|}">Last</a>
+    </li>
+</ul>
+
+<script>
+    const saveReq = () => {
+        location.href = "/board/save";
+    }
+</script>
+
+
+
+
+
+<!--
+
+jpa 페이징
+&lt;!&ndash; 첫번째 페이지로 이동 &ndash;&gt;
+&lt;!&ndash; /board/paging?page=1 &ndash;&gt;
+<a th:href="@{/board/paging(page=1)}">First</a>
+&lt;!&ndash; 이전 링크 활성화 비활성화 &ndash;&gt;
+&lt;!&ndash; boardList.getNumber() 사용자:2페이지 getNumber()=1 &ndash;&gt;
+<a th:href="${boardList.first} ? '#' : @{/board/paging(page=${boardList.number})}">prev</a>
+
+&lt;!&ndash; 페이지 번호 링크(현재 페이지는 숫자만)
+        for(int page=startPage; page<=endPage; page++)&ndash;&gt;
+<span th:each="page: ${#numbers.sequence(startPage, endPage)}">
+&lt;!&ndash; 현재페이지는 링크 없이 숫자만 &ndash;&gt;
+    <span th:if="${page == boardList.number + 1}" th:text="${page}"></span>
+&lt;!&ndash; 현재페이지 번호가 아닌 다른 페이지번호에는 링크를 보여줌 &ndash;&gt;
+    <span th:unless="${page == boardList.number + 1}">
+        <a th:href="@{/board/paging(page=${page})}" th:text="${page}"></a>
+    </span>
+</span>
+
+&lt;!&ndash; 다음 링크 활성화 비활성화
+    사용자: 2페이지, getNumber: 1, 3페이지&ndash;&gt;
+<a th:href="${boardList.last} ? '#' : @{/board/paging(page=${boardList.number + 2})}">next</a>
+&lt;!&ndash; 마지막 페이지로 이동 &ndash;&gt;
+<a th:href="@{/board/paging(page=${boardList.totalPages})}">Last</a>
+-->
+
+</body>
+
+</html>

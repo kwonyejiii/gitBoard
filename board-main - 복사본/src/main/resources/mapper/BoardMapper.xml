@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.codingrecipe.board.mapper.BoardMapper"> <!--namespace는 Mapper 인터페이스의 패키지 경로-->
+
+
+    <!-- 전체 레코드 수 가져오는 쿼리 -->
+    <select id="getTotalRecordCount" resultType="int">
+        SELECT COUNT(*) FROM board_table
+    </select>
+
+
+    <!-- 게시물 목록을 페이징하여 가져오는 쿼리 -->
+    <select id="selectPagedData" resultType="com.codingrecipe.board.entity.BoardEntity">
+        SELECT * FROM board_table
+        ORDER BY id DESC
+        LIMIT #{pageSize} OFFSET #{offset}
+
+    </select>
+
+</mapper>
