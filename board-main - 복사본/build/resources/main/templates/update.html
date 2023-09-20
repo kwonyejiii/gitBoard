@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>글 수정</title>
+  <style>
+    /* 스타일을 직접 지정합니다. */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    input[type="button"] {
+      background-color: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    input[type="button"]:hover {
+      background-color: #555;
+    }
+  </style>
+</head>
+<body>
+<form action="/board/update" method="post" name="updateForm">
+  <input type="hidden" name="id" th:value="${boardUpdate.id}">
+  <label for="boardWriter">작성자:</label>
+  <input type="text" name="boardWriter" id="boardWriter" th:value="${boardUpdate.boardWriter}" readonly><br>
+  <label for="boardPass">비밀번호:</label>
+  <input type="password" name="boardPass" id="boardPass"><br>
+  <label for="boardTitle">제목:</label>
+  <input type="text" name="boardTitle" id="boardTitle" th:value="${boardUpdate.boardTitle}"><br>
+  <label for="boardContents">내용:</label>
+  <textarea name="boardContents" id="boardContents" cols="30" rows="10" th:text="${boardUpdate.boardContents}"></textarea><br>
+  <input type="hidden" name="boardHits" id="boardHits" th:value="${boardUpdate.boardHits}">
+  <input type="button" value="글 수정" onclick="boardUpdate()">
+</form>
+<script th:inline="javascript">
+  const boardUpdate = () => {
+    const pass = [[${boardUpdate.boardPass}]];
+    const inputPass = document.getElementById("boardPass").value;
+    if (pass === inputPass) {
+      document.updateForm.submit();
+    } else {
+      alert("비밀번호가 일치하지 않습니다!");
+    }
+  }
+</script>
+</body>
+</html>
